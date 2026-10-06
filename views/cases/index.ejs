@@ -1,0 +1,64 @@
+<%- include('../partials/header') %>
+
+<div class="cadms-layout">
+  <%- include('../partials/nav') %>
+
+  <main class="cadms-main">
+    <div class="cadms-topbar">
+      <h2 class="cadms-topbar__title">Cases</h2>
+      <div class="cadms-topbar__actions">
+        <a href="/cases/create" class="cadms-btn cadms-btn--primary">+ New Case</a>
+      </div>
+    </div>
+
+    <div class="cadms-content">
+      <%- include('../partials/flash') %>
+
+      <div class="cadms-card">
+        <div class="cadms-table-wrap">
+          <% if (cases && cases.length > 0) { %>
+            <table class="cadms-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Child</th>
+                  <th>Offender</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th>Date Reported</th>
+                  <th>Caseworker</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% cases.forEach(function(c) { %>
+                  <tr>
+                    <td><strong>#<%= c.caseId %></strong></td>
+                    <td><%= c.childFirst %> <%= c.childLast %></td>
+                    <td><%= c.offenderName || '—' %></td>
+                    <td><span class="cadms-badge cadms-badge--<%= c.caseType.toLowerCase() %>"><%= c.caseType %></span></td>
+                    <td><span class="cadms-badge cadms-badge--<%= c.status.toLowerCase() %>"><%= c.status === 'UnderInvestigation' ? 'Under Investigation' : c.status %></span></td>
+                    <td><%= c.dateReported ? new Date(c.dateReported).toLocaleDateString('en-GB') : '—' %></td>
+                    <td><%= c.caseworkerName || '—' %></td>
+                    <td>
+                      <a href="/cases/<%= c.caseId %>" class="cadms-btn cadms-btn--outline cadms-btn--sm">View</a>
+                      <a href="/cases/<%= c.caseId %>/edit" class="cadms-btn cadms-btn--outline cadms-btn--sm">Edit</a>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <div class="cadms-empty">
+              <div class="cadms-empty__icon">📁</div>
+              <div class="cadms-empty__text">No cases found</div>
+              <a href="/cases/create" class="cadms-btn cadms-btn--primary" style="margin-top:var(--cadms-sp-md)">Create First Case</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%- include('../partials/footer') %>

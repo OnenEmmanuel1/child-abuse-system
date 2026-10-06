@@ -1,0 +1,18 @@
+<%- include('../partials/pageHeader', { pageHeading: 'Create case' }) %>
+<form class="cadms-card cadms-card__body cadms-form" method="post" action="/cases/create">
+  <div class="cadms-form-row">
+    <div class="cadms-form-group"><label for="childId">Child record <span class="required">*</span></label><select class="cadms-select" id="childId" name="childId" required><option value="">Choose a child</option><% children.forEach(c => { %><option value="<%= c.childId %>"><%= c.firstName %> <%= c.lastName %> (ID <%= c.childId %>)</option><% }) %></select><a href="/children/create">Create a child record</a></div>
+    <div class="cadms-form-group"><label for="offenderId">Linked offender</label><select class="cadms-select" id="offenderId" name="offenderId"><option value="">Not identified / not linked</option><% offenders.forEach(o => { %><option value="<%= o.offenderId %>"><%= o.fullName || 'Unknown' %> (ID <%= o.offenderId %>)</option><% }) %></select><a href="/offenders/create">Create an offender record</a></div>
+  </div>
+  <div class="cadms-form-row">
+    <div class="cadms-form-group"><label for="caseType">Case type <span class="required">*</span></label><select class="cadms-select" id="caseType" name="caseType" required><option value="">Choose a type</option><% CASE_TYPES.forEach(t => { %><option value="<%= t %>"><%= t %></option><% }) %></select></div>
+    <div class="cadms-form-group"><label for="dateReported">Date reported <span class="required">*</span></label><input class="cadms-input" type="date" id="dateReported" name="dateReported" required></div>
+  </div>
+  <div class="cadms-form-row">
+    <div class="cadms-form-group"><label for="status">Status</label><select class="cadms-select" id="status" name="status"><% CASE_STATUS.forEach(s => { %><option value="<%= s %>"><%= s %></option><% }) %></select></div>
+    <% if (currentUser.role === 'Administrator') { %><div class="cadms-form-group"><label for="assignedCaseworker">Assigned caseworker</label><select class="cadms-select" id="assignedCaseworker" name="assignedCaseworker"><option value="">Unassigned</option><% caseworkers.forEach(u => { %><option value="<%= u.userId %>"><%= u.fullName %></option><% }) %></select></div><% } %>
+  </div>
+  <div class="cadms-form-group"><label for="notes">Administrative notes</label><textarea class="cadms-textarea" id="notes" name="notes" maxlength="5000"></textarea></div>
+  <div class="cadms-form-actions"><button class="cadms-btn cadms-btn--primary" type="submit">Save case</button><a class="cadms-btn cadms-btn--outline" href="/cases">Cancel</a></div>
+</form>
+<%- include('../partials/pageFooter') %>

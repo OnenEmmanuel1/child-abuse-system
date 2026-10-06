@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+node_modules/
+certs/
+*.pem
+*.key
+secrets/
+npm-debug.log*

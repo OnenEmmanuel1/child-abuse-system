@@ -1,0 +1,12 @@
+<%- include('header') %>
+<div class="cadms-layout">
+  <%- include('nav') %>
+  <main class="cadms-main">
+    <header class="cadms-topbar">
+      <h1 class="cadms-topbar__title"><%= pageHeading %></h1>
+      <div class="cadms-topbar__actions">
+        <% if (typeof actionHref !== 'undefined' && actionHref) { %><a class="cadms-btn cadms-btn--primary" href="<%= actionHref %>"><%= actionLabel %></a><% } %>
+      </div>
+    </header>
+    <div class="cadms-content">
+      <%- include('flash', { error: error || [], success: success || [] }) %>

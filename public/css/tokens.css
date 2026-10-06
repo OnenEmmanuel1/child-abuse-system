@@ -1,0 +1,63 @@
+/* ─────────────────────────────────────────────────────────────
+   CADMS — Design Tokens
+   Flat, solid-color design system. Zero gradients. Inter font.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* ── Core Palette ── */
+  --cadms-primary:    #247bb5;
+  --cadms-primary-h:  #176393;
+  --cadms-primary-l:  #e7f4fc;
+  --cadms-success:    #0d7a3f;
+  --cadms-success-l:  #e6f5ed;
+  --cadms-warning:    #b45309;
+  --cadms-warning-l:  #fef3e2;
+  --cadms-danger:     #c41e3a;
+  --cadms-danger-l:   #fce8ec;
+  --cadms-info:       #0369a1;
+  --cadms-info-l:     #e0f2fe;
+
+  /* ── Surfaces ── */
+  --cadms-bg:         #edf6fb;
+  --cadms-surface:    #ffffff;
+  --cadms-border:     #d3e1ea;
+  --cadms-border-l:   #e2edf3;
+
+  /* ── Text ── */
+  --cadms-text:       #111827;
+  --cadms-text-sec:   #4b5563;
+  --cadms-text-muted: #9ca3af;
+  --cadms-text-inv:   #ffffff;
+
+  /* ── Sidebar ── */
+  --cadms-sidebar:    #ffffff;
+  --cadms-sidebar-h:  #eaf5fb;
+  --cadms-sidebar-tx: #526575;
+  --cadms-sidebar-ac: #247bb5;
+
+  /* ── Spacing Scale ── */
+  --cadms-sp-xs:  4px;
+  --cadms-sp-sm:  8px;
+  --cadms-sp-md:  16px;
+  --cadms-sp-lg:  24px;
+  --cadms-sp-xl:  32px;
+  --cadms-sp-2xl: 48px;
+
+  /* ── Typography ── */
+  --cadms-font:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --cadms-font-mono:  'JetBrains Mono', 'Fira Code', monospace;
+  --cadms-fs-xs:   11px;
+  --cadms-fs-sm:   13px;
+  --cadms-fs-base: 14px;
+  --cadms-fs-md:   16px;
+  --cadms-fs-lg:   20px;
+  --cadms-fs-xl:   24px;
+  --cadms-fs-2xl:  30px;
+
+  /* ── Radius ── */
+  --cadms-radius:    6px;
+  --cadms-radius-lg: 10px;
+
+  /* ── Shadows (flat — minimal) ── */
+  --cadms-shadow:    0 1px 2px rgba(0,0,0,0.05);
+  --cadms-shadow-md: 0 2px 4px rgba(0,0,0,0.08);
+}

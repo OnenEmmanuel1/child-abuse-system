@@ -1,0 +1,161 @@
+<%- include('../partials/header') %>
+
+<div class="cadms-layout">
+  <%- include('../partials/nav') %>
+
+  <main class="cadms-main">
+    <div class="cadms-topbar">
+      <h2 class="cadms-topbar__title">Case #<%= caseRecord.caseId %></h2>
+      <div class="cadms-topbar__actions">
+        <a href="/cases/<%= caseRecord.caseId %>/edit" class="cadms-btn cadms-btn--outline">Edit Case</a>
+        <a href="/investigations/create/<%= caseRecord.caseId %>" class="cadms-btn cadms-btn--primary">+ Add Investigation</a>
+        <% if (typeof currentUser !== 'undefined' && currentUser.role === 'Administrator') { %>
+          <form method="POST" action="/cases/<%= caseRecord.caseId %>/delete" class="cadms-confirm-delete" style="display:inline">
+            <button type="submit" class="cadms-btn cadms-btn--danger cadms-btn--sm">Delete</button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="cadms-content">
+      <%- include('../partials/flash') %>
+
+      <!-- Case Details -->
+      <div class="cadms-card">
+        <div class="cadms-card__header">
+          <h3 class="cadms-card__title">Case Details</h3>
+          <span class="cadms-badge cadms-badge--<%= caseRecord.status.toLowerCase() %>"><%= caseRecord.status === 'UnderInvestigation' ? 'Under Investigation' : caseRecord.status %></span>
+        </div>
+        <div class="cadms-card__body">
+          <div class="cadms-detail-grid">
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Case ID</div>
+              <div class="cadms-detail-item__value">#<%= caseRecord.caseId %></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Case Type</div>
+              <div class="cadms-detail-item__value"><span class="cadms-badge cadms-badge--<%= caseRecord.caseType.toLowerCase() %>"><%= caseRecord.caseType %></span></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Date Reported</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.dateReported ? new Date(caseRecord.dateReported).toLocaleDateString('en-GB') : '—' %></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Assigned Caseworker</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.caseworkerName || 'Unassigned' %></div>
+            </div>
+            <div class="cadms-detail-item cadms-detail-item--full">
+              <div class="cadms-detail-item__label">Notes</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.notes || '—' %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Child Information -->
+      <div class="cadms-card">
+        <div class="cadms-card__header">
+          <h3 class="cadms-card__title">Child Information</h3>
+          <a href="/children/<%= caseRecord.childId %>" class="cadms-btn cadms-btn--outline cadms-btn--sm">View Full Record</a>
+        </div>
+        <div class="cadms-card__body">
+          <div class="cadms-detail-grid">
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Name</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.childFirst %> <%= caseRecord.childLast %></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Date of Birth</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.childDOB ? new Date(caseRecord.childDOB).toLocaleDateString('en-GB') : '—' %></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Gender</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.childGender || '—' %></div>
+            </div>
+            <div class="cadms-detail-item">
+              <div class="cadms-detail-item__label">Guardian Contact</div>
+              <div class="cadms-detail-item__value"><%= caseRecord.guardianContact || '—' %></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Offender Information -->
+      <% if (caseRecord.offenderName) { %>
+        <div class="cadms-card">
+          <div class="cadms-card__header">
+            <h3 class="cadms-card__title">Alleged Offender</h3>
+            <a href="/offenders/<%= caseRecord.offenderId %>" class="cadms-btn cadms-btn--outline cadms-btn--sm">View Full Record</a>
+          </div>
+          <div class="cadms-card__body">
+            <div class="cadms-detail-grid">
+              <div class="cadms-detail-item">
+                <div class="cadms-detail-item__label">Name</div>
+                <div class="cadms-detail-item__value"><%= caseRecord.offenderName %></div>
+              </div>
+              <div class="cadms-detail-item">
+                <div class="cadms-detail-item__label">Known Aliases</div>
+                <div class="cadms-detail-item__value"><%= caseRecord.knownAliases || '—' %></div>
+              </div>
+              <div class="cadms-detail-item">
+                <div class="cadms-detail-item__label">Last Known Address</div>
+                <div class="cadms-detail-item__value"><%= caseRecord.lastKnownAddress || '—' %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- Investigations -->
+      <div class="cadms-card">
+        <div class="cadms-card__header">
+          <h3 class="cadms-card__title">Investigations</h3>
+          <a href="/investigations/create/<%= caseRecord.caseId %>" class="cadms-btn cadms-btn--outline cadms-btn--sm">+ Add</a>
+        </div>
+        <div class="cadms-table-wrap">
+          <% if (investigations && investigations.length > 0) { %>
+            <table class="cadms-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Investigator</th>
+                  <th>Status</th>
+                  <th>Progress Notes</th>
+                  <th>Last Updated</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% investigations.forEach(function(inv) { %>
+                  <tr>
+                    <td>#<%= inv.investigationId %></td>
+                    <td><%= inv.investigatorName %></td>
+                    <td><span class="cadms-badge cadms-badge--<%= inv.status.toLowerCase() %>"><%= inv.status %></span></td>
+                    <td><%= inv.progressNotes ? (inv.progressNotes.length > 80 ? inv.progressNotes.substring(0, 80) + '…' : inv.progressNotes) : '—' %></td>
+                    <td><%= inv.lastUpdated ? new Date(inv.lastUpdated).toLocaleString('en-GB') : '—' %></td>
+                    <td>
+                      <a href="/investigations/<%= inv.investigationId %>/edit" class="cadms-btn cadms-btn--outline cadms-btn--sm">Edit</a>
+                      <% if (typeof currentUser !== 'undefined' && currentUser.role === 'Administrator') { %>
+                        <form method="POST" action="/investigations/<%= inv.investigationId %>/delete" class="cadms-confirm-delete" style="display:inline">
+                          <button type="submit" class="cadms-btn cadms-btn--danger cadms-btn--sm">Delete</button>
+                        </form>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          <% } else { %>
+            <div class="cadms-empty" style="padding:var(--cadms-sp-lg)">
+              <p>No investigations recorded yet.</p>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <a href="/cases" class="cadms-btn cadms-btn--outline" style="margin-top:var(--cadms-sp-md)">← Back to Cases</a>
+    </div>
+  </main>
+</div>
+
+<%- include('../partials/footer') %>

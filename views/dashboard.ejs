@@ -1,0 +1,133 @@
+<%- include('partials/header') %>
+
+<div class="cadms-layout cadms-dashboard">
+  <%- include('partials/nav') %>
+  <main class="cadms-main">
+    <div class="cadms-content cadms-dashboard__content">
+      <%- include('partials/flash') %>
+
+      <header class="cadms-welcome">
+        <div>
+          <p class="cadms-eyebrow">CADMS · CASE MANAGEMENT</p>
+          <h1>Hello, <%= currentUser.fullName.split(' ')[0] %></h1>
+          <p class="cadms-welcome__copy">Here is your casework overview for today.</p>
+        </div>
+        <div class="cadms-welcome__actions">
+          <span class="cadms-role-chip"><span class="cadms-presence-dot"></span><%= currentUser.role %></span>
+          <a href="/cases/create" class="cadms-btn cadms-btn--primary">＋ <span>New case</span></a>
+        </div>
+      </header>
+
+      <section class="cadms-dashboard-grid" aria-label="Casework overview">
+        <div class="cadms-dashboard-maincol">
+          <div class="cadms-overview-grid">
+            <a class="cadms-overview-card cadms-overview-card--blue" href="/cases">
+              <span class="cadms-overview-card__icon" aria-hidden="true"><i class="bi bi-folder2-open"></i></span>
+              <span class="cadms-overview-card__label"><%= currentUser.role === 'Caseworker' ? 'My assigned cases' : 'All cases' %></span>
+              <strong class="cadms-overview-card__value"><%= summary.totalCases || 0 %></strong>
+              <span class="cadms-overview-card__foot">View case register <span aria-hidden="true">↗</span></span>
+            </a>
+            <a class="cadms-overview-card cadms-overview-card--amber" href="/search?status=Reported">
+              <span class="cadms-overview-card__icon" aria-hidden="true"><i class="bi bi-clock-history"></i></span>
+              <span class="cadms-overview-card__label">Reported</span>
+              <strong class="cadms-overview-card__value"><%= summary.reportedCases || 0 %></strong>
+              <span class="cadms-overview-card__foot">Awaiting review</span>
+            </a>
+            <a class="cadms-overview-card cadms-overview-card--sky" href="/search?status=UnderInvestigation">
+              <span class="cadms-overview-card__icon" aria-hidden="true"><i class="bi bi-search"></i></span>
+              <span class="cadms-overview-card__label">Under investigation</span>
+              <strong class="cadms-overview-card__value"><%= summary.activeCases || 0 %></strong>
+              <span class="cadms-overview-card__foot">Currently active</span>
+            </a>
+            <a class="cadms-overview-card cadms-overview-card--mint" href="/search?status=Closed">
+              <span class="cadms-overview-card__icon" aria-hidden="true"><i class="bi bi-check-circle-fill"></i></span>
+              <span class="cadms-overview-card__label">Closed</span>
+              <strong class="cadms-overview-card__value"><%= summary.closedCases || 0 %></strong>
+              <span class="cadms-overview-card__foot">Completed cases</span>
+            </a>
+          </div>
+
+          <section class="cadms-panel cadms-status-panel" aria-labelledby="status-title">
+            <div class="cadms-panel__heading">
+              <div><p class="cadms-eyebrow">AT A GLANCE</p><h2 id="status-title">Case status</h2></div>
+              <a href="/cases" class="cadms-text-link">Open case register <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="cadms-status-list">
+              <% const total = Number(summary.totalCases) || 0; %>
+              <% [
+                { label: 'Reported', amount: Number(summary.reportedCases) || 0, tone: 'amber' },
+                { label: 'Under investigation', amount: Number(summary.activeCases) || 0, tone: 'blue' },
+                { label: 'Closed', amount: Number(summary.closedCases) || 0, tone: 'mint' }
+              ].forEach(function(item) { const percent = total ? Math.round(item.amount / total * 100) : 0; %>
+                <div class="cadms-status-row">
+                  <div class="cadms-status-row__meta"><span><i class="cadms-status-dot cadms-status-dot--<%= item.tone %>"></i><%= item.label %></span><strong><%= item.amount %></strong></div>
+                  <div class="cadms-progress" role="progressbar" aria-label="<%= item.label %> cases" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100"><span class="cadms-progress__fill cadms-progress__fill--<%= item.tone %>" style="width:<%= percent %>%"></span></div>
+                </div>
+              <% }); %>
+            </div>
+            <p class="cadms-panel__note">Counts reflect <%= currentUser.role === 'Caseworker' ? 'cases assigned to you' : 'the full case register' %>.</p>
+          </section>
+
+          <section class="cadms-panel cadms-recent-panel" aria-labelledby="recent-title">
+            <div class="cadms-panel__heading">
+              <div><p class="cadms-eyebrow">LATEST RECORDS</p><h2 id="recent-title"><%= currentUser.role === 'Caseworker' ? 'Your recent cases' : 'Recent cases' %></h2></div>
+              <a href="/cases" class="cadms-btn cadms-btn--soft">View all cases <span aria-hidden="true">→</span></a>
+            </div>
+            <% if (recentCases && recentCases.length) { %>
+              <div class="cadms-table-wrap">
+                <table class="cadms-table cadms-recent-table">
+                  <thead><tr><th>Case</th><th>Case type</th><th>Status</th><th>Date reported</th><th><span class="cadms-visually-hidden">Action</span></th></tr></thead>
+                  <tbody><% recentCases.forEach(function(c) { %>
+                    <tr>
+                      <td><a class="cadms-case-ref" href="/cases/<%= c.caseId %>">#<%= c.caseId %> <span><%= c.childFirst %> <%= c.childLast %></span></a></td>
+                      <td><span class="cadms-type-label"><i class="cadms-type-dot cadms-type-dot--<%= c.caseType.toLowerCase() %>"></i><%= c.caseType %></span></td>
+                      <td><span class="cadms-badge cadms-badge--<%= c.status.toLowerCase() %>"><%= c.status === 'UnderInvestigation' ? 'In progress' : c.status %></span></td>
+                      <td><%= c.dateReported ? new Date(c.dateReported).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—' %></td>
+                      <td><a class="cadms-row-action" href="/cases/<%= c.caseId %>" aria-label="Open case <%= c.caseId %>"><i class="bi bi-arrow-right"></i></a></td>
+                    </tr>
+                  <% }); %></tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <div class="cadms-empty cadms-dashboard-empty"><span class="cadms-empty__icon" aria-hidden="true">▤</span><strong>No cases to show</strong><p>New cases assigned to you will appear here.</p><a href="/search" class="cadms-text-link">Search cases →</a></div>
+            <% } %>
+          </section>
+        </div>
+
+        <aside class="cadms-dashboard-rail" aria-label="Quick links">
+          <section class="cadms-panel cadms-quick-panel">
+            <div class="cadms-panel__heading"><div><p class="cadms-eyebrow">GET THINGS DONE</p><h2>Quick actions</h2></div></div>
+            <a class="cadms-quick-link" href="/cases/create"><span class="cadms-quick-link__icon"><i class="bi bi-plus-lg" aria-hidden="true"></i></span><span><strong>Open a new case</strong><small>Record a new referral</small></span><b><i class="bi bi-arrow-right" aria-hidden="true"></i></b></a>
+            <a class="cadms-quick-link" href="/search"><span class="cadms-quick-link__icon"><i class="bi bi-search" aria-hidden="true"></i></span><span><strong>Find a case</strong><small>Search assigned records</small></span><b><i class="bi bi-arrow-right" aria-hidden="true"></i></b></a>
+            <a class="cadms-quick-link" href="/offenders-search"><span class="cadms-quick-link__icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span><span><strong>Offender tracking</strong><small>Review linked case records</small></span><b><i class="bi bi-arrow-right" aria-hidden="true"></i></b></a>
+          </section>
+
+          <% if (currentUser.role === 'Administrator') { %>
+            <section class="cadms-admin-card">
+              <span class="cadms-admin-card__icon" aria-hidden="true"><i class="bi bi-bar-chart-line"></i></span>
+              <p class="cadms-eyebrow">ADMINISTRATION</p>
+              <h2>System overview</h2>
+              <p>Review aggregate reports and manage authorized staff access.</p>
+              <a href="/reports" class="cadms-admin-card__link">Open reports <span>→</span></a>
+              <a href="/users" class="cadms-admin-card__link">Manage users <span>→</span></a>
+            </section>
+          <% } else { %>
+            <section class="cadms-note-card">
+              <span class="cadms-note-card__icon" aria-hidden="true"><i class="bi bi-shield-lock-fill"></i></span>
+              <h2>Confidential workspace</h2>
+              <p>Case records are restricted to your assignments. Access is recorded in the audit log.</p>
+            </section>
+          <% } %>
+
+          <section class="cadms-help-card">
+            <span class="cadms-help-card__icon" aria-hidden="true"><i class="bi bi-question-lg"></i></span>
+            <div><strong>Need help?</strong><p>Contact your system administrator for account or access support.</p></div>
+          </section>
+        </aside>
+      </section>
+      <footer class="cadms-dashboard-footer"><span>CADMS · Authorized personnel only</span><span>Confidential case management</span></footer>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>

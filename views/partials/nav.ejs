@@ -1,0 +1,25 @@
+<aside class="cadms-sidebar">
+  <div class="cadms-sidebar__logo">
+    <a href="/dashboard" aria-label="CADMS dashboard" title="CADMS dashboard"><span class="cadms-brand-mark"><i class="bi bi-shield-check" aria-hidden="true"></i></span><span class="cadms-brand-word">CADMS</span></a>
+  </div>
+  <nav class="cadms-sidebar__nav" aria-label="Main navigation">
+    <div class="cadms-sidebar__section">Workspace</div>
+    <a href="/dashboard" class="cadms-sidebar__link" aria-label="Dashboard" title="Dashboard"><i class="icon bi bi-grid-1x2-fill" aria-hidden="true"></i><span class="cadms-nav-label">Dashboard</span></a>
+    <a href="/cases" class="cadms-sidebar__link" aria-label="Cases" title="Cases"><i class="icon bi bi-folder2-open" aria-hidden="true"></i><span class="cadms-nav-label">Cases</span></a>
+    <a href="/search" class="cadms-sidebar__link" aria-label="Search cases" title="Search cases"><i class="icon bi bi-search" aria-hidden="true"></i><span class="cadms-nav-label">Search cases</span></a>
+    <div class="cadms-sidebar__section">Records</div>
+    <a href="/children" class="cadms-sidebar__link" aria-label="Children" title="Children"><i class="icon bi bi-person-fill" aria-hidden="true"></i><span class="cadms-nav-label">Children</span></a>
+    <a href="/offenders" class="cadms-sidebar__link" aria-label="Offenders" title="Offenders"><i class="icon bi bi-person-badge" aria-hidden="true"></i><span class="cadms-nav-label">Offenders</span></a>
+    <a href="/offenders-search" class="cadms-sidebar__link" aria-label="Offender tracking" title="Offender tracking"><i class="icon bi bi-diagram-3" aria-hidden="true"></i><span class="cadms-nav-label">Offender tracking</span></a>
+    <% if (typeof currentUser !== 'undefined' && currentUser.role === 'Administrator') { %>
+      <div class="cadms-sidebar__section">Administration</div>
+      <a href="/reports" class="cadms-sidebar__link" aria-label="Reports" title="Reports"><i class="icon bi bi-bar-chart-line" aria-hidden="true"></i><span class="cadms-nav-label">Reports</span></a>
+      <a href="/users" class="cadms-sidebar__link" aria-label="User management" title="User management"><i class="icon bi bi-people" aria-hidden="true"></i><span class="cadms-nav-label">User management</span></a>
+      <a href="/audit" class="cadms-sidebar__link" aria-label="Audit log" title="Audit log"><i class="icon bi bi-journal-text" aria-hidden="true"></i><span class="cadms-nav-label">Audit log</span></a>
+    <% } %>
+  </nav>
+  <div class="cadms-sidebar__footer">
+    <div class="cadms-sidebar__user"><span class="cadms-user-avatar" aria-hidden="true"><%= currentUser.fullName.charAt(0).toUpperCase() %></span><span class="cadms-user-name"><strong><%= currentUser.fullName %></strong><small><%= currentUser.role %></small></span></div>
+    <a href="/logout" class="cadms-sidebar__link cadms-sidebar__logout" aria-label="Log out" title="Log out"><i class="icon bi bi-box-arrow-right" aria-hidden="true"></i><span class="cadms-nav-label">Log out</span></a>
+  </div>
+</aside>

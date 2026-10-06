@@ -1,0 +1,55 @@
+<%- include('partials/header') %>
+
+<main class="cadms-login">
+  <div class="cadms-login__shell">
+    <section class="cadms-login__form-panel" aria-labelledby="login-title">
+      <div class="cadms-login__form-content">
+        <a class="cadms-login__brand" href="/login" aria-label="CADMS staff sign in">
+          <span class="cadms-brand-mark"><i class="bi bi-shield-check" aria-hidden="true"></i></span>
+          <span>CADMS</span>
+        </a>
+
+        <div class="cadms-login__heading">
+          <span class="cadms-login__eyebrow">AUTHORIZED PERSONNEL</span>
+          <h1 id="login-title">Welcome back</h1>
+          <p>Sign in to continue to your secure casework workspace.</p>
+        </div>
+
+        <%- include('partials/flash') %>
+
+        <form method="POST" action="/login" class="cadms-form cadms-login__form">
+          <div class="cadms-form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="cadms-input" placeholder="Enter your username" required autocomplete="username" autofocus>
+          </div>
+
+          <div class="cadms-form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="cadms-input" placeholder="Enter your password" required autocomplete="current-password">
+          </div>
+
+          <button type="submit" class="cadms-btn cadms-btn--primary cadms-login__submit"><i class="bi bi-lock-fill" aria-hidden="true"></i> Sign in</button>
+        </form>
+
+        <p class="cadms-login__notice"><i class="bi bi-shield-lock" aria-hidden="true"></i> Authorized personnel only. Access is logged and audited.</p>
+      </div>
+    </section>
+
+    <aside class="cadms-login__visual" aria-label="Child protection awareness">
+      <img
+        src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/child-abuse-template-design-659d75f852c2717fca6bbc0a02a43c64_screen.jpg?ts=1698539797"
+        alt="Child protection awareness poster"
+        decoding="async"
+      >
+      <div class="cadms-login__image-caption">
+        <span class="cadms-login__caption-icon"><i class="bi bi-heart-pulse-fill" aria-hidden="true"></i></span>
+        <p class="cadms-login__eyebrow">A CONFIDENTIAL WORKSPACE</p>
+        <h2>Supporting safer outcomes for children.</h2>
+        <p>Secure, coordinated case management for authorized child protection teams.</p>
+      </div>
+      <span class="cadms-login__image-tag"><i class="bi bi-shield-check" aria-hidden="true"></i> Private · Protected · Accountable</span>
+    </aside>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
